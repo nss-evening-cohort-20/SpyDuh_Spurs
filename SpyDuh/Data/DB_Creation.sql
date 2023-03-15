@@ -6,11 +6,11 @@ GO
 USE [SpyDuh]
 GO
 
-DROP TABLE IF EXISTS [Spy];
 DROP TABLE IF EXISTS [Skill];
 DROP TABLE IF EXISTS [Services];
 DROP TABLE IF EXISTS [Friends];
 DROP TABLE IF EXISTS [Enemies];
+DROP TABLE IF EXISTS [Spy];
 
 CREATE TABLE [Spy] (
   [id] integer PRIMARY KEY identity NOT NULL,
@@ -24,15 +24,15 @@ GO
 
 CREATE TABLE [Skill] (
   [id] integer PRIMARY KEY identity NOT NULL,
-  [skill] nvarchar(255) NOT NULL,
+  [skillName] nvarchar(255) NOT NULL,
   [spyId] int NOT NULL,
-  [skillLevel] nvarchar(255)
+  [skillLevel] int NOT NULL,
 )
 GO
 
 CREATE TABLE [Services] (
   [id] integer PRIMARY KEY identity NOT NULL,
-  [service] nvarchar(255) NOT NULL,
+  [serviceName] nvarchar(255) NOT NULL,
   [cost] int NOT NULL,
   [spyId] int
 )
