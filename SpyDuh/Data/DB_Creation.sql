@@ -61,10 +61,10 @@ GO
 ALTER TABLE [Enemies] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
 GO
 
-ALTER TABLE [Enemies] ADD FOREIGN KEY ([enemiesId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Enemies] ADD FOREIGN KEY ([enemyId]) REFERENCES [Spy] ([id])
 GO
 
-ALTER TABLE [Friends] ADD FOREIGN KEY ([friendsId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Friends] ADD FOREIGN KEY ([friendId]) REFERENCES [Spy] ([id])
 GO
 
 ALTER TABLE [Services] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])

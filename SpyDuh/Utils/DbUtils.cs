@@ -18,6 +18,10 @@ namespace SpyDuh.Utils
         {
             return reader.GetDateTime(reader.GetOrdinal(column));
         }
+        public static bool GetBool(SqlDataReader reader, string column)
+        {
+            return reader.GetBoolean(reader.GetOrdinal(column));
+        }
         public static void AddParameter(SqlCommand cmd, string name, object value)
         {
             if(value == null)
