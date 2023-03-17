@@ -7,7 +7,7 @@ namespace SpyDuh.Repositories
     {
         public SkillsRepository(IConfiguration configuration) : base(configuration) { }
 
-        public Skill GetSpecificSkills(string skill)
+        public List<Skill> GetSpecificSkills(string skill)
         {
             using (var conn = Connection)
             {
@@ -18,32 +18,39 @@ namespace SpyDuh.Repositories
                         SELECT sp.id spId, sp.name, sp.userName, sp.email, sp.isMember, sp.dateCreated, 
                                s.id sId, s.skillName, s.skillLevel, s.spyId 
                         FROM Spy sp 
-                        JOIN Skill s on s.spyId = sp.id WHERE s.skillName = @skill";
-                    cmd.Parameters.AddWithValue("@skill", skill);
+                        JOIN Skill s on s.spyId = sp.id WHERE s.skillName LIKE @skill";
+                    cmd.Parameters.AddWithValue("@skill", "%" + skill + "%");
 
                     var reader = cmd.ExecuteReader();
 
-                    Skill skills = null;
+                    var skills = new List<Skill>();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        skills = new Skill()
+                        var skillId = DbUtils.GetInt(reader, "sId");
+                        var existingSkill = skills.FirstOrDefault(x => x.Id == skillId);
+                        if (existingSkill == null)
                         {
-                            Id = DbUtils.GetInt(reader, "sId"),
-                            SkillName = DbUtils.GetString(reader, "skillName"),
-                            SkillLevel = DbUtils.GetInt(reader, "skillLevel"),
-                            SpyId = DbUtils.GetInt(reader, "spyId"),
-                            spy = new Spy()
-                            {
-                                Id = DbUtils.GetInt(reader, "spId"),
-                                Name = DbUtils.GetString(reader, "name"),
-                                UserName = DbUtils.GetString(reader, "userName"),
-                                Email = DbUtils.GetString(reader, "email"),
-                                IsMemeber = DbUtils.GetBool(reader, "isMember"),
-                                DateCreated = DbUtils.GetDateTime(reader, "DateCreated"),
 
-                            }
-                        };
+                            existingSkill = new Skill()
+                            {
+                                Id = DbUtils.GetInt(reader, "sId"),
+                                SkillName = DbUtils.GetString(reader, "skillName"),
+                                SkillLevel = DbUtils.GetInt(reader, "skillLevel"),
+                                SpyId = DbUtils.GetInt(reader, "spyId"),
+                                spy = new Spy() //using the spy class from the models
+                                {
+                                    Id = DbUtils.GetInt(reader, "spId"),
+                                    Name = DbUtils.GetString(reader, "name"),
+                                    UserName = DbUtils.GetString(reader, "userName"),
+                                    Email = DbUtils.GetString(reader, "email"),
+                                    IsMemeber = DbUtils.GetBool(reader, "isMember"),
+                                    DateCreated = DbUtils.GetDateTime(reader, "DateCreated"),
+                                    Skills = new List<Skill>()
+                                }                                
+                            };
+                        }
+                        skills.Add(existingSkill);
                     }
                     reader.Close();
 
