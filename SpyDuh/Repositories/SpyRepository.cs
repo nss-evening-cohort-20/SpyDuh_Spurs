@@ -7,40 +7,6 @@ namespace SpyDuh.Repositories
     {
         public SpyRepository(IConfiguration configuration) : base(configuration) { }
 
-        public List<Spy> GetAll()
-        {
-            using (var conn = Connection)
-            {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"
-                    SELECT id, name, userName, email, isMember, DateCreated
-                    FROM Spy
-                    ORDER BY id";
-
-                    var reader = cmd.ExecuteReader();
-
-                    var spies = new List<Spy>();
-                    while (reader.Read())
-                    {
-                        spies.Add(new Spy()
-                        {
-                            Id = DbUtils.GetInt(reader, "id"),
-                            Name = DbUtils.GetString(reader, "name"),
-                            UserName = DbUtils.GetString(reader, "userName"),
-                            Email = DbUtils.GetString(reader, "email"),
-                            IsMember = DbUtils.GetBool(reader, "isMember"),
-                            DateCreated = DbUtils.GetDateTime(reader, "DateCreated")
-                        });
-                    }
-                    reader.Close();
-
-                    return spies;
-                }
-            }
-        }
-
         public void Add(Spy spy)
         {
             using (var conn = Connection)

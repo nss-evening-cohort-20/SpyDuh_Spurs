@@ -18,7 +18,7 @@ namespace SpyDuh.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_spyRepository.GetAll());
+            return Ok();
         }
 
         [HttpPost]
