@@ -15,6 +15,7 @@ namespace SpyDuh
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<ISkillsRepository, SkillsRepository>();
+            builder.Services.AddTransient<ISpyRepository, SpyRepository>();
 
 
             var app = builder.Build();

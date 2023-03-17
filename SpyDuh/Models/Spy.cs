@@ -11,9 +11,9 @@ namespace SpyDuh.Models
         public string UserName { get; set; }
         [Required]
         public string Email { get; set; }
-        public bool IsMemeber { get; set; }
+        public bool IsMember { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<Skill> Skills { get; set; }
-        public List<Service> Services { get; set; }
+        //public List<Skill> Skills { get; set; }
+        //public List<Service> Services { get; set; }
     }
 }

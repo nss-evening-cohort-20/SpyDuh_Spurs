@@ -44,9 +44,8 @@ namespace SpyDuh.Repositories
                                     Name = DbUtils.GetString(reader, "name"),
                                     UserName = DbUtils.GetString(reader, "userName"),
                                     Email = DbUtils.GetString(reader, "email"),
-                                    IsMemeber = DbUtils.GetBool(reader, "isMember"),
-                                    DateCreated = DbUtils.GetDateTime(reader, "DateCreated"),
-                                    Skills = new List<Skill>()
+                                    IsMember = DbUtils.GetBool(reader, "isMember"),
+                                    DateCreated = DbUtils.GetDateTime(reader, "DateCreated")
                                 }                                
                             };
                         }
