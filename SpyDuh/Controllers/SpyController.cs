@@ -26,5 +26,15 @@ namespace SpyDuh.Controllers
             return Ok(enemies);
 
         }
+        [HttpGet]
+        public IActionResult GetFriends(int id)
+        {
+            var friends = _spyRepository.getFriends(id);
+            if (friends == null)
+            {
+                return NotFound();
+            }
+            return Ok(friends);
+        }
     }
 }
