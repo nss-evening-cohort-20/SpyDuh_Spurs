@@ -17,26 +17,40 @@ namespace SpyDuh.Repositories
                     cmd.CommandText = @"
 SELECT 
 S.Name, S.UserName, S.Email, S.IsMember, S.DateCreated,
+
 E.Id, E.SpyId, E.EnemySpyId,
+
 ES.Id AS EnemyId, ES.Name AS EnemyName, ES.UserName AS EnemyUserName, ES.Email AS EnemyEmail, ES.IsMember AS EnemyIsMember, ES.DateCreated AS EnemyDateCreated,
+
 SJ.skillLevel,
+
 SK.Id AS SkillId, SK.skillName,
+
 SRVJ.Cost,
+
 SRV.Id AS ServiceId, SRV.serviceName
+
 FROM Spy S
+
 LEFT JOIN Enemy E 
 ON E.spyId = S.id
+
 LEFT JOIN Spy ES
 ON E.EnemySpyId = ES.id
+
 LEFT JOIN SKillJoin SJ
 ON SJ.SpyId = ES.id
+
 LEFT JOIN
 Skill SK
 ON SK.id = SJ.SkillId
+
 LEFT JOIN [ServiceJoin] SRVJ
 ON SRVJ.id = ES.id
+
 LEFT JOIN [Service] SRV
 ON SRV.id = SRVJ.serviceId
+
 WHERE S.Id = @id";
 
                     DbUtils.AddParameter(cmd, "@id", id);
