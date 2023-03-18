@@ -18,12 +18,25 @@ namespace SpyDuh.Repositories
 SELECT 
 S.Name, S.UserName, S.Email, S.IsMember, S.DateCreated,
 E.Id, E.SpyId, E.EnemySpyId,
-ES.Id AS EnemyId, ES.Name AS EnemyName, ES.UserName AS EnemyUserName, ES.Email AS EnemyEmail, ES.IsMember AS EnemyIsMember, ES.DateCreated AS EnemyDateCreated
+ES.Id AS EnemyId, ES.Name AS EnemyName, ES.UserName AS EnemyUserName, ES.Email AS EnemyEmail, ES.IsMember AS EnemyIsMember, ES.DateCreated AS EnemyDateCreated,
+SJ.skillLevel,
+SK.Id AS SkillId, SK.skillName,
+SRVJ.Cost,
+SRV.Id AS ServiceId, SRV.serviceName
 FROM Spy S
 LEFT JOIN Enemy E 
 ON E.spyId = S.id
 LEFT JOIN Spy ES
 ON E.EnemySpyId = ES.id
+LEFT JOIN SKillJoin SJ
+ON SJ.SpyId = ES.id
+LEFT JOIN
+Skill SK
+ON SK.id = SJ.SkillId
+LEFT JOIN [ServiceJoin] SRVJ
+ON SRVJ.id = ES.id
+LEFT JOIN [Service] SRV
+ON SRV.id = SRVJ.serviceId
 WHERE S.Id = @id";
 
                     DbUtils.AddParameter(cmd, "@id", id);
@@ -33,17 +46,39 @@ WHERE S.Id = @id";
                     while (reader.Read())
                     {
 
+                        var enemyId = DbUtils.GetInt(reader, "EnemyId");
+                        var existingEnemy = enemies.FirstOrDefault(x => x.Id == enemyId);
 
-
-                        enemies.Add(new Spy
+                        if(existingEnemy == null)
                         {
-                            Id = DbUtils.GetInt(reader, "EnemyId"),
-                            Name = DbUtils.GetString(reader, "EnemyName"),
-                            UserName = DbUtils.GetString(reader, "EnemyUserName"),
-                            Email = DbUtils.GetString(reader, "EnemyEmail"),
-                            IsMemeber = DbUtils.GetBoolean(reader, "EnemyIsMember"),
-                            DateCreated = DbUtils.GetDateTime(reader, "EnemyDateCreated")
+                            existingEnemy = new Spy()
+                            {
+                                Id = enemyId,
+                                Name = DbUtils.GetString(reader, "EnemyName"),
+                                UserName = DbUtils.GetString(reader, "EnemyUserName"),
+                                Email = DbUtils.GetString(reader, "EnemyEmail"),
+                                IsMemeber = DbUtils.GetBoolean(reader, "EnemyIsMember"),
+                                DateCreated = DbUtils.GetDateTime(reader, "EnemyDateCreated"),
+                                Skills = new List<Skill>(),
+                                Services= new List<Service>()
+                            };
 
+                            enemies.Add(existingEnemy);
+
+                        }
+
+                        existingEnemy.Skills.Add(new Skill()
+                        {
+                            Id = DbUtils.GetInt(reader, "SkillId"),
+                            SkillName = DbUtils.GetString(reader,"skillName"),
+                            SkillLevel = DbUtils.GetInt(reader,"skillLevel")
+                        });
+
+                        existingEnemy.Services.Add(new Service()
+                        {
+                            Id = DbUtils.GetInt(reader, "ServiceId"),
+                            ServiceName = DbUtils.GetString(reader,"serviceName"),
+                            Cost = DbUtils.GetInt(reader,"cost")
                         });
 
 
