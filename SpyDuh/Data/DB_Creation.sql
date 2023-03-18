@@ -6,10 +6,12 @@ GO
 USE [SpyDuh]
 GO
 
+DROP TABLE IF EXISTS [SKillJoin];
+DROP TABLE IF EXISTS [ServiceJoin];
 DROP TABLE IF EXISTS [Skill];
-DROP TABLE IF EXISTS [Services];
+DROP TABLE IF EXISTS [Service];
 DROP TABLE IF EXISTS [Friends];
-DROP TABLE IF EXISTS [Enemies];
+DROP TABLE IF EXISTS [Enemy];
 DROP TABLE IF EXISTS [Spy];
 
 CREATE TABLE [Spy] (
@@ -25,16 +27,28 @@ GO
 CREATE TABLE [Skill] (
   [id] integer PRIMARY KEY identity NOT NULL,
   [skillName] nvarchar(255) NOT NULL,
-  [spyId] int NOT NULL,
-  [skillLevel] int NOT NULL,
 )
 GO
 
-CREATE TABLE [Services] (
+CREATE TABLE [SkillJoin](
+[id] integer PRIMARY KEY identity NOT NULL,
+[skillId] int NOT NULL,
+[skillLevel] int,
+[spyId] int NOT NULL
+)
+GO
+
+CREATE TABLE [Service] (
   [id] integer PRIMARY KEY identity NOT NULL,
   [serviceName] nvarchar(255) NOT NULL,
-  [cost] int NOT NULL,
-  [spyId] int
+)
+GO
+
+CREATE TABLE [ServiceJoin](
+	[id] integer PRIMARY KEY identity NOT NULL,
+	[serviceId] int NOT NULL,
+	[cost] int NOT NULL,
+	[spyId] int
 )
 GO
 
@@ -45,29 +59,35 @@ CREATE TABLE [Friends] (
 )
 GO
 
-CREATE TABLE [Enemies] (
+CREATE TABLE [Enemy] (
   [id] integer PRIMARY KEY identity NOT NULL,
   [spyId] int NOT NULL,
-  [enemyId] int
+  [enemySpyId] int
 )
 GO
 
-ALTER TABLE [Skill] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Skilljoin] ADD FOREIGN KEY ([skillId]) REFERENCES [Skill] ([id])
+GO
+
+ALTER TABLE [Skilljoin] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
 GO
 
 ALTER TABLE [Friends] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
 GO
 
-ALTER TABLE [Enemies] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Enemy] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
 GO
 
-ALTER TABLE [Enemies] ADD FOREIGN KEY ([enemiesId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Enemy] ADD FOREIGN KEY ([enemySpyId]) REFERENCES [Spy] ([id])
 GO
 
-ALTER TABLE [Friends] ADD FOREIGN KEY ([friendsId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Friends] ADD FOREIGN KEY ([friendId]) REFERENCES [Spy] ([id])
 GO
 
-ALTER TABLE [Services] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Servicejoin] ADD FOREIGN KEY ([serviceId]) REFERENCES [Service] ([id])
+GO
+
+ALTER TABLE [Servicejoin] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
 GO
 
 SET IDENTITY_INSERT [Spy] ON
@@ -83,27 +103,51 @@ SET IDENTITY_INSERT [Spy] OFF
 
 SET IDENTITY_INSERT [Skill] ON
 INSERT INTO [Skill]
-  ([id], [skillName], [spyId], [skillLevel])
+  ([id], [skillName])
 VALUES
-  (1, 'Sneaking', 1, 5),
-  (2, 'Lockpicking', 1, 5),
-  (3, 'Espionage', 1, 4),
-  (4, 'Hacking', 2, 5),
-  (5, 'Sneaking', 2, 5);
+  (1, 'Sneaking'),
+  (2, 'Lockpicking'),
+  (3, 'Espionage'),
+  (4, 'Hacking'),
+  (5, 'Sharpshooting');
 
 SET IDENTITY_INSERT [Skill] OFF
 
-SET IDENTITY_INSERT [Services] ON
-INSERT INTO [Services]
-  ([id], [serviceName], [spyId], [cost])
+SET IDENTITY_INSERT [SkillJoin] ON
+INSERT INTO [SkillJoin]
+  ([id], [skillId], [spyId], [skillLevel])
 VALUES
-  (1, 'Assassination', 1, 100),
-  (2, 'Bankrobbery', 1, 5),
-  (3, 'smuggling', 1, 4),
-  (4, 'seduction', 2, 5),
-  (5, 'forgery', 2, 5);
+  (1, 1, 2, 100),
+  (2, 4, 2, 50),
+  (3, 2, 3, 75),
+  (4, 5, 1, 10),
+  (5, 3, 3, 80);
 
-SET IDENTITY_INSERT [Services] OFF
+SET IDENTITY_INSERT [SkillJoin] OFF
+
+SET IDENTITY_INSERT [Service] ON
+INSERT INTO [Service]
+  ([id], [serviceName])
+VALUES
+  (1, 'Assassination'),
+  (2, 'Bankrobbery'),
+  (3, 'smuggling'),
+  (4, 'seduction'),
+  (5, 'forgery');
+
+SET IDENTITY_INSERT [Service] OFF
+
+SET IDENTITY_INSERT [ServiceJoin] ON
+INSERT INTO [ServiceJoin]
+  ([id], [serviceId], [cost], [spyId])
+VALUES
+  (1, 2, 500.00, 3),
+  (2, 2, 1000.00, 4),
+  (3, 3, 250.00, 2),
+  (4, 1, 50.00, 1),
+  (5, 5, 125.00, 4);
+
+SET IDENTITY_INSERT [ServiceJoin] OFF
 
 SET IDENTITY_INSERT [Friends] ON
 INSERT INTO [Friends]
@@ -117,9 +161,9 @@ VALUES
 
 SET IDENTITY_INSERT [Friends] OFF
 
-SET IDENTITY_INSERT [Enemies] ON
-INSERT INTO [Enemies]
-  ([id], [spyId], [enemyId])
+SET IDENTITY_INSERT [Enemy] ON
+INSERT INTO [Enemy]
+  ([id], [spyId], [enemySpyId])
 VALUES
   (1, 1, 2 ),
   (2, 2, 3),
@@ -127,4 +171,4 @@ VALUES
   (4, 4, 1),
   (5, 3, 3);
 
-SET IDENTITY_INSERT [Enemies] OFF
+SET IDENTITY_INSERT [Enemy] OFF

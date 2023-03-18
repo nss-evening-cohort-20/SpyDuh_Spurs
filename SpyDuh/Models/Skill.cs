@@ -6,7 +6,7 @@
         public string SkillName { get; set; }
         public int SkillLevel { get; set; }
         public int SpyId { get; set; }
-        public List<Spy> Spies { get; set; }
+        public Spy Spy { get; set; }
 
     }
 }
