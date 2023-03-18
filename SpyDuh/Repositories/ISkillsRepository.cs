@@ -4,6 +4,6 @@ namespace SpyDuh.Repositories
 {
     public interface ISkillsRepository
     {
-        List<Skill> GetSpecificSkills(string skill);
+        List<Spy> GetSpecificSkills(string skill);
     }
 }
