@@ -3,7 +3,7 @@
 
 namespace SpyDuh.Repositories
 {
-    public class BaseRepository
+    public abstract class BaseRepository
     {
         private readonly string _connectionString;
 

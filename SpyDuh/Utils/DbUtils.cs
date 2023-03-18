@@ -30,5 +30,10 @@ namespace SpyDuh.Utils
             }
         }
 
+        public static bool GetBoolean(SqlDataReader reader, string column)
+        {
+            return reader.GetBoolean(reader.GetOrdinal(column));
+        }
+
     }
 }

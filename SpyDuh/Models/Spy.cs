@@ -15,5 +15,6 @@ namespace SpyDuh.Models
         public DateTime DateCreated { get; set; }
         public List<Skill> Skills { get; set; }
         public List<Service> Services { get; set; }
+        public List<Spy> Enemies { get; set; }
     }
 }
