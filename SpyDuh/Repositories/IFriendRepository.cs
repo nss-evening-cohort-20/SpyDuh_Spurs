@@ -4,6 +4,6 @@ namespace SpyDuh.Repositories
 {
     public interface IFriendRepository
     {
-        Spy GetFriends(int id);
+        List<Spy> GetFriends(int id);
     }
 }
