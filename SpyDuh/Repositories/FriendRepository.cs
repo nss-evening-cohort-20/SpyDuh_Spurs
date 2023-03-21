@@ -6,16 +6,16 @@ namespace SpyDuh.Repositories
     public class FriendRepository : BaseRepository, IFriendRepository
     {
         public FriendRepository(IConfiguration configuration) : base(configuration) { }
-        public List<Spy> GetFriends(int id)
+        public Spy GetFriends(int spyId)
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT DISTINCT
+                    cmd.CommandText = @"SELECT
                     S.id as sId, S.Name, S.UserName, S.Email, S.IsMember, S.DateCreated,
-                    F.Id, F.SpyId, F.friendId,
+                    F.Id, F.SpyId as fId, F.friendId,
                     FS.Id AS FriendId, FS.Name AS FriendName, FS.UserName AS FriendUserName, FS.Email AS FriendEmail, FS.IsMember AS FriendIsMember, FS.DateCreated AS FriendDateCreated
                     FROM Spy S
                     LEFT JOIN Friends F
@@ -23,35 +23,36 @@ namespace SpyDuh.Repositories
                     LEFT JOIN Spy FS
                     ON F.friendId = FS.id
                     WHERE S.Id = @id";
-                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.Parameters.AddWithValue("@id", spyId);
 
                     var reader = cmd.ExecuteReader();
-                    var friend = new List<Spy>();
+                    Spy spy = null;
 
                     while (reader.Read())
                     {
-                        var friendId = DbUtils.GetInt(reader, "sId");
-                        var existingFriend = friend.FirstOrDefault(x => x.Id == friendId);
-                        if (friendId == null)
+                        //var friendId = DbUtils.GetInt(reader, "sId");
+                        //var existingFriend = friend.FirstOrDefault(x => x.Id == friendId);
+                        if (spy == null)
                         {
-                            existingFriend = new Spy()
+
+
+                            spy = new Spy()
                             {
-                                Id = friendId,
+                                Id = DbUtils.GetInt(reader, "sId"),
                                 Name = DbUtils.GetString(reader, "name"),
                                 UserName = DbUtils.GetString(reader, "userName"),
                                 Email = DbUtils.GetString(reader, "email"),
                                 IsMemeber = DbUtils.GetBool(reader, "isMember"),
                                 DateCreated = DbUtils.GetDateTime(reader, "DateCreated"),
                                 Friends = new List<Friend>()
+
                             };
                         }
-                        friend.Add(existingFriend);
 
-
-
-                        existingFriend.Friends.Add(new Friend()
+                        spy.Friends.Add(new Friend()
                         {
-                            Id = DbUtils.GetInt(reader, "FriendId"),
+                            
                             spy = new Spy()
                             {
                                 Id = DbUtils.GetInt(reader, "FriendId"),
@@ -62,7 +63,7 @@ namespace SpyDuh.Repositories
 
                     reader.Close();
 
-                    return friend;
+                    return spy;
                 }
             }
         }
