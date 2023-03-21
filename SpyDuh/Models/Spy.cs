@@ -16,5 +16,6 @@ namespace SpyDuh.Models
         public List<Skill> Skills { get; set; }
         public List<Service> Services { get; set; }
         public List<Spy> Enemies { get; set; }
+        public List<Friend> Friends { get; set; }
     }
 }
