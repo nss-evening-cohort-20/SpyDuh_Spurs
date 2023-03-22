@@ -1,3 +1,5 @@
+using SpyDuh.Repositories;
+
 namespace SpyDuh
 {
     public class Program
@@ -12,6 +14,9 @@ namespace SpyDuh
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            //if below is not present it will cause a 500 response from swagger
+            builder.Services.AddTransient<IServicesRepository, ServicesRepository>();
+
 
             var app = builder.Build();
 

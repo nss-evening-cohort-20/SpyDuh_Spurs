@@ -8,6 +8,9 @@ namespace SpyDuh.Repositories
 
         Service GetById(int id);
 
-        Service Add(Service service);
+        void Add(Service service);
+
+        void Update(Service service);
+        void Delete(int id);
     }
 }

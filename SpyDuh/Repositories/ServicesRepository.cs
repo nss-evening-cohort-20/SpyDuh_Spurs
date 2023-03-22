@@ -16,30 +16,40 @@ namespace SpyDuh.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                  SELECT s.Id AS ServiceId, s.ServiceName, s.Cost,
-                
-                sp.Id AS SpyId, sp.Name, sp.UserName ,sp.Email, sp.DateCreated
-                
-                FROM Services s
-                LEFT JOIN Spy sp ON s.SpyID = sp.Id";
+                    SELECT 
+                    s.serviceName,
+                    sj.cost,
+                    spy.name, spy.userName
+                    FROM Service s
+                    JOIN ServiceJoin sj
+                    ON s.id = sj.serviceId
+                    JOIN Spy spy
+                    ON spy.id = sj.spyId ";
 
                     var reader = cmd.ExecuteReader();
 
-                    var services = new List<Service>();
+                    var service = new List<Service>();
                     while (reader.Read())
                     {
-                        services.Add(new Service()
+                        service.Add(new Service()
                         {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            ServiceName = DbUtils.GetString(reader, "ServiceName"),
-                            Cost = DbUtils.GetInt(reader, "Cost"),
-                            SpyId = DbUtils.GetInt(reader, "SpyId"),
+                            //Id = DbUtils.GetInt(reader, "id"),
+                            ServiceName = DbUtils.GetString(reader, "serviceName"),
+                            ServiceJoin = new ServiceJoin()
+                            {
+                                cost = DbUtils.GetInt(reader, "cost")
+                            },
+                            Spy = new Spy()
+                            {
+                                Name = DbUtils.GetString(reader, "name"),
+                                UserName = DbUtils.GetString(reader, "userName")
+                            } 
                         });
                     }
 
                     reader.Close();
 
-                    return services;
+                    return service;
                 }
             }
         }
@@ -51,7 +61,7 @@ namespace SpyDuh.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    SELECT ServiceName, Cost, SpyID
+                    SELECT serviceName
                       FROM Service
                      WHERE Id = @Id
                       ";
@@ -66,9 +76,7 @@ namespace SpyDuh.Repositories
                         service = new Service()
                         {
                             Id = id,
-                            ServiceName = DbUtils.GetString(reader, "ServiceName"),
-                            Cost = DbUtils.GetInt(reader, "Cost"),
-                            SpyId = DbUtils.GetInt(reader, "SpyId"),
+                            ServiceName = DbUtils.GetString(reader, "serviceName")
                         };
                     }
 
@@ -86,15 +94,43 @@ namespace SpyDuh.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                     INSERT INTO Services (ServiceName, Cost, SpyId)
+                     INSERT INTO Service (serviceName)
                       OUTPUT INSERTED.ID
-                    VALUES (@ServiceName, @Cost, @SpyId)";
+                    VALUES (@serviceName)";
 
-                    DbUtils.AddParameter(cmd, "@Service", service.ServiceName);
-                    DbUtils.AddParameter(cmd, "@Cost", service.Cost);
-                    DbUtils.AddParameter(cmd, "@SpyId", service.SpyId);
+                    DbUtils.AddParameter(cmd, "@serviceName", service.ServiceName);
 
                     service.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+        public void Update(Service service)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                     UPDATE Service
+                     SET serviceName = @serviceName
+                     WHERE Id = @Id";
+
+                    DbUtils.AddParameter(cmd, "@serviceName", service.ServiceName);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void Delete(int id) 
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Service WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
