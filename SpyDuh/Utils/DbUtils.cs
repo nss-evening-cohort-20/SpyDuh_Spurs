@@ -39,5 +39,16 @@ namespace SpyDuh.Utils
             return reader.GetBoolean(reader.GetOrdinal(column));
         }
 
+        public static bool IsDbNull(SqlDataReader reader, string column)
+        {
+            return reader.IsDBNull(reader.GetOrdinal(column));
+        }
+
+
+        public static bool IsNotDbNull(SqlDataReader reader, string column)
+        {
+            return !IsDbNull(reader, column);
+        }
+
     }
 }
