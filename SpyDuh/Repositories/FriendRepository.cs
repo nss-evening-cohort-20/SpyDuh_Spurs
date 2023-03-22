@@ -31,12 +31,8 @@ namespace SpyDuh.Repositories
 
                     while (reader.Read())
                     {
-                        //var friendId = DbUtils.GetInt(reader, "sId");
-                        //var existingFriend = friend.FirstOrDefault(x => x.Id == friendId);
                         if (spy == null)
                         {
-
-
                             spy = new Spy()
                             {
                                 Id = DbUtils.GetInt(reader, "sId"),
@@ -51,8 +47,7 @@ namespace SpyDuh.Repositories
                         }
 
                         spy.Friends.Add(new Friend()
-                        {
-                            
+                        {                            
                             spy = new Spy()
                             {
                                 Id = DbUtils.GetInt(reader, "FriendId"),
