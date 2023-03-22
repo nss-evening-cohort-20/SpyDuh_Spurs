@@ -40,12 +40,12 @@ namespace SpyDuh.Repositories
                         {
                             Id = id,
                             Name = DbUtils.GetString(reader, "AssignmentName"),
-                            Handler = new Handler()
+                            Handler = new AssignmentHandler()
                             {
                                 Id = DbUtils.GetInt(reader, "handlerId"),
                                 Name = DbUtils.GetString(reader, "HandlerName")
                             },
-                            Spy = new Spy()
+                            Spy = new AssigmentSpy()
                             {
                                 Id = DbUtils.GetInt(reader, "spyId"),
                                 Name = DbUtils.GetString(reader, "SpyName")
