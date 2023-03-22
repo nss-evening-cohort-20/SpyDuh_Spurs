@@ -13,8 +13,8 @@ namespace SpyDuh.Models
         public string Email { get; set; }
         public bool IsMemeber { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<Skill> Skills { get; set; }
-        public List<Service> Services { get; set; }
+        public List<Skill>? Skills { get; set; } = null;
+        public List<Service>? Services { get; set; } = null;
         public List<Spy> Enemies { get; set; }
         public List<Spy> Friends { get; set; }
     }

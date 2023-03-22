@@ -15,7 +15,7 @@ namespace SpyDuh.Controllers
             _spyRepository = spyRepository;
         }
 
-        [HttpGet]
+        [HttpGet("{id}/Enemies")]
         public IActionResult GetEnemies(int id) 
         { 
             var enemies = _spyRepository.getEnemies(id);
@@ -26,7 +26,7 @@ namespace SpyDuh.Controllers
             return Ok(enemies);
 
         }
-        [HttpGet]
+        [HttpGet("{id}/Friends")]
         public IActionResult GetFriends(int id)
         {
             var friends = _spyRepository.getFriends(id);
