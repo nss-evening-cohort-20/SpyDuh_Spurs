@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SpyDuh.Models;
 using SpyDuh.Repositories;
 
 namespace SpyDuh.Controllers
@@ -15,15 +16,21 @@ namespace SpyDuh.Controllers
             _skillsRepository = skillsRepository;
         }
 
-        [HttpGet("{skill}")]
-        public IActionResult Get(string skill)
+        [HttpGet("search")]
+        public IActionResult Search(string skill)
         {
-            var skills = _skillsRepository.GetSpecificSkills(skill);
-            if(skills == null)
+            return Ok(_skillsRepository.GetSpecificSkills(skill));
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, SkillJoin skillJoin)
+        {
+            if(id != skillJoin.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
-            return Ok(skills);
+            _skillsRepository.UpdateSkill(skillJoin);
+            return NoContent();
         }
     }
 }
