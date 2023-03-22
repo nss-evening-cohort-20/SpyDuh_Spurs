@@ -14,6 +14,8 @@ namespace SpyDuh
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddTransient<ISpyRepository, SpyRepository>();
+            builder.Services.AddTransient<ISkillsRepository, SkillsRepository>();
             //if below is not present it will cause a 500 response from swagger
             builder.Services.AddTransient<IServicesRepository, ServicesRepository>();
 
@@ -25,6 +27,15 @@ namespace SpyDuh
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                app.UseCors(options =>
+                {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyMethod();
+                    options.AllowAnyHeader();
+
+                });
+
             }
 
             app.UseHttpsRedirection();
