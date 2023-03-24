@@ -6,6 +6,7 @@
         public string ServiceName { get; set; }
         public Spy Spy { get; set; }
         
+        public int Cost { get; set; }
         public ServiceJoin ServiceJoin { get; set; }
     }
 }
