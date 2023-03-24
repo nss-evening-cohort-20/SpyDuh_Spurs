@@ -28,7 +28,7 @@ CREATE TABLE [Spy] (
   [email] nvarchar(255) NOT NULL,
   [isMember] BIT,
   [handlerId] int NOT NULL,
-  [DateCreated] datetime NOT NULL
+  [DateCreated] datetime 
 )
 GO
 CREATE TABLE [Skill] (

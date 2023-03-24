@@ -35,15 +35,15 @@ namespace SpyDuh.Repositories
                         {
                             //Id = DbUtils.GetInt(reader, "id"),
                             ServiceName = DbUtils.GetString(reader, "serviceName"),
-                            ServiceJoin = new ServiceJoin()
-                            {
-                                cost = DbUtils.GetInt(reader, "cost")
-                            },
-                            Spy = new Spy()
-                            {
-                                Name = DbUtils.GetString(reader, "name"),
-                                UserName = DbUtils.GetString(reader, "userName")
-                            } 
+                            //ServiceJoin = new ServiceJoin()
+                            //{
+                            //    cost = DbUtils.GetInt(reader, "cost")
+                            //},
+                            //Spy = new Spy()
+                            //{
+                            //    Name = DbUtils.GetString(reader, "name"),
+                            //    UserName = DbUtils.GetString(reader, "userName")
+                            //} 
                         });
                     }
 
