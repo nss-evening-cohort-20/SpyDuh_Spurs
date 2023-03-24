@@ -21,7 +21,7 @@ namespace SpyDuh.Repositories
                         LEFT JOIN SkillJoin sj on s.id = sj.spyId
                         LEFT JOIN Skill sk on sj.skillId = sk.id
                         WHERE sk.skillName LIKE @skill";
-                    cmd.Parameters.AddWithValue("@skill", "%" + skill + "%");
+                    DbUtils.AddParameter(cmd, "@skill", $"%{skill}%");
 
                     var reader = cmd.ExecuteReader();
 
@@ -57,6 +57,30 @@ namespace SpyDuh.Repositories
                     reader.Close();
 
                     return spySkills;
+                }
+            }
+        }
+        public void UpdateSkill(SkillJoin skillJoin)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE SkillJoin
+                            SET skillId = @skillId
+                                skillLevel = @skillLevel
+                                spyId = @spyId
+                        WHERE id = @id";
+
+                    DbUtils.AddParameter(cmd, "@skillId", skillJoin.skillId);
+                    DbUtils.AddParameter(cmd, "@skillLevel", skillJoin.skillLevel);
+                    DbUtils.AddParameter(cmd, "@spyId", skillJoin.spyId);
+                    DbUtils.AddParameter(cmd, "@id", skillJoin.Id);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
