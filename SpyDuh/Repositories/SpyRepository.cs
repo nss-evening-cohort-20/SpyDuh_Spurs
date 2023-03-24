@@ -215,28 +215,74 @@ order by e.enemySpyId asc";
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT
-                    S.Name, S.UserName, S.Email, S.IsMember, S.DateCreated,
+                    cmd.CommandText = @"
+                    SELECT
+                    S.Id AS SID, S.Name, S.UserName, S.Email, S.IsMember, S.DateCreated,
+                    SK.Id AS SpySkillId, SK.skillName AS SpySkill,
+                    SJ.skillLevel AS SpySkillLevel,
+
                     F.Id, F.SpyId, F.friendSpyId,
+
+                    
                     FS.Id AS FriendId, FS.Name AS FriendName, FS.UserName AS FriendUserName, FS.Email AS FriendEmail, FS.IsMember AS FriendIsMember, FS.DateCreated AS FriendDateCreated
 
+                    FSJ.skillLevel AS FriendSkillLevel,
+
+                    FSK.Id AS FriendSkillId, FSK.SkillName AS FriendSkill,
+
+                    FSRVJ.Cost AS FriendCost
+
+                    FSRV.Id AS EnemyServiceId, FSRV.ServiceName as EnemyServiceName
+
                     FROM Spy S
+
+                    LEFT JOIN SkillJoin SJ
+                    ON SJ.SpyId = S.id
+
+                    LEFT JOIN Skill SK
+                    ON SK.id = SJ.SkillId
+
+                    LEFT JOIN [ServiceJoin] SRVJ
+                    ON SRVJ.spyId = S.id
+
+                    LEFT JOIN [Service] SRV
+                    ON SRV.id = SRVJ.serviceId
+
                     LEFT JOIN Friends F 
                     ON F.spyId = S.Id
+
                     LEFT JOIN Spy FS 
                     ON F.friendSpyId = FS.id
-                    WHERE S.Id = @id";
+
+                    LEFT JOIN SKillJoin FSJ
+                    ON FSJ.SpyId = FS.id
+
+                    LEFT JOIN
+                    Skill FSK
+                    ON FSK.id = FSJ.SkillId
+
+                    LEFT JOIN [ServiceJoin] FSRVJ
+                    ON FSRVJ.spyId = FS.id
+
+                    LEFT JOIN [Service] FSRV
+                    ON FSRV.id = FSRVJ.serviceId
+
+                    WHERE f.spyId = @id or f.friendSpyId = @id
+                    order by f.friendSpyId asc";
 
                     DbUtils.AddParameter(cmd, "@id", id);
 
                     var reader = cmd.ExecuteReader();
                     var spy = new Spy();
                     var friends = new List<Spy>();
+                    var spyIds = new List<int>();
                     while (reader.Read())
 
                     {
+                        var spyId = DbUtils.GetInt(reader, "SpyId");
                         var friendId = DbUtils.GetInt(reader, "FriendId");
                         var exisitingFriend = friends.FirstOrDefault(x => x.Id == friendId);
+                        //
                         if (exisitingFriend == null)
                         {
                             exisitingFriend = new Spy()
