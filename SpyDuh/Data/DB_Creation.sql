@@ -74,6 +74,7 @@ CREATE TABLE [Assignment](
 [spyId] int NOT NULL,
 [allotedTime] int NOT NULL,
 [dateCreated] datetime NOT NULL,
+[endDate] datetime NOT NULL,
 [status] nvarchar(255) NOT NULL,
 )
 GO
@@ -207,7 +208,7 @@ VALUES
 SET IDENTITY_INSERT [Enemy] OFF
 SET IDENTITY_INSERT [Assignment] ON
 INSERT INTO [Assignment]
-  ([id], [name], [handlerId],[spyId],[allotedTime],[dateCreated],[status])
+  ([id], [name], [handlerId],[spyId],[allotedTime],[dateCreated],[endDate],[status])
 VALUES
-  (1, 'Operation Certain Death', 1 , 2 , 60 , '03-02-2023','ongoing');
+  (1, 'Operation Certain Death', 1 , 2 , 60 , '03-02-2023','05-01-2023','ongoing');
 SET IDENTITY_INSERT [Assignment] OFF
