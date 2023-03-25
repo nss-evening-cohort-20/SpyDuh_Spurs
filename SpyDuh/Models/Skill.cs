@@ -7,4 +7,9 @@
         public int SkillLevel { get; set; }
 
     }
+    public class SkillNoId
+    {
+        public string SkillName { get; set; }
+        public int SkillLevel { get; set; }
+    }
 }

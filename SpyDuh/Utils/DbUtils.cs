@@ -14,6 +14,10 @@ namespace SpyDuh.Utils
         {
             return reader.GetInt32(reader.GetOrdinal(column));  
         }
+        public static int GetInt16(SqlDataReader reader, string column)
+        {
+            return reader.GetInt16(reader.GetOrdinal(column));
+        }
         public static DateTime GetDateTime(SqlDataReader reader, string column)
         {
             return reader.GetDateTime(reader.GetOrdinal(column));

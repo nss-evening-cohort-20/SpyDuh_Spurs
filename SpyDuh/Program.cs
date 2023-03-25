@@ -17,8 +17,10 @@ namespace SpyDuh
             builder.Services.AddTransient<ISpyRepository, SpyRepository>();
             builder.Services.AddTransient<ISkillsRepository, SkillsRepository>();
             builder.Services.AddTransient<IAssignmentRepository, AssignmentRepository>();
+            builder.Services.AddTransient<IHandlerRepository, HandlerRepository>();
             //if below is not present it will cause a 500 response from swagger
             builder.Services.AddTransient<IServicesRepository, ServicesRepository>();
+            
 
 
             var app = builder.Build();

@@ -28,7 +28,7 @@ CREATE TABLE [Spy] (
   [email] nvarchar(255) NOT NULL,
   [isMember] BIT,
   [handlerId] int NOT NULL,
-  [DateCreated] datetime 
+  [DateCreated] datetime NOT NULL
 )
 GO
 CREATE TABLE [Skill] (
@@ -75,7 +75,7 @@ CREATE TABLE [Assignment](
 [allotedTime] int NOT NULL,
 [dateCreated] datetime NOT NULL,
 [endDate] datetime NOT NULL,
-[status] nvarchar(255) NOT NULL,
+[isCompleted] BIT
 )
 GO
 CREATE TABLE [Handler](
@@ -208,7 +208,7 @@ VALUES
 SET IDENTITY_INSERT [Enemy] OFF
 SET IDENTITY_INSERT [Assignment] ON
 INSERT INTO [Assignment]
-  ([id], [name], [handlerId],[spyId],[allotedTime],[dateCreated],[endDate],[status])
+  ([id], [name], [handlerId],[spyId],[allotedTime],[dateCreated],[endDate],[isCompleted])
 VALUES
-  (1, 'Operation Certain Death', 1 , 2 , 60 , '03-02-2023','05-01-2023','ongoing');
+  (1, 'Operation Certain Death', 1 , 2 , 60 , '03-02-2023','05-01-2023',0);
 SET IDENTITY_INSERT [Assignment] OFF

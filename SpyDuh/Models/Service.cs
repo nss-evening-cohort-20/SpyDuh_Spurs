@@ -6,4 +6,10 @@
         public string ServiceName { get; set; }
         public int Cost { get; set; }
     }
+
+    public class ServiceNoId
+    {
+        public string ServiceName { get; set; }
+        public int Cost { get; set; }
+    }
 }

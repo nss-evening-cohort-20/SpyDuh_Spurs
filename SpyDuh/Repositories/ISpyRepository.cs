@@ -12,6 +12,7 @@ namespace SpyDuh.Repositories
        public void AddEnemy(int spyId, int enemyId);
        public List<FriendSpy> listFriends(int id);
        public void AddFriend(int spyId, int friendId);
+       //public int HandlerLength();
     }
 
 }
