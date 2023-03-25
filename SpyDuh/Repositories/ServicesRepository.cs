@@ -84,7 +84,7 @@ namespace SpyDuh.Repositories
                 }
             }
         }
-        public void Add(Service service)
+        public void Add(ServiceWithoutCost service)
         {
             using (var conn = Connection)
             {
@@ -102,7 +102,7 @@ namespace SpyDuh.Repositories
                 }
             }
         }
-        public void Update(Service service)
+        public void Update(ServiceWithoutCost service)
         {
             using (var conn = Connection)
             {
