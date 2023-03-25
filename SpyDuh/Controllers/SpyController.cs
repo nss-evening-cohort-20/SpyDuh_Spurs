@@ -63,15 +63,22 @@ namespace SpyDuh.Controllers
             _spyRepository.AddEnemy(spyId, enemyId);
             return NoContent();
         }
-        [HttpGet("{id}/Friends")]
-        public IActionResult GetFriends(int id)
+        [HttpGet("{id}/ListFriends")]
+        public IActionResult ListFriends(int id)
         {
-            var friends = _spyRepository.getFriends(id);
+            var friends = _spyRepository.listFriends(id);
             if (friends == null)
             {
                 return NotFound();
             }
             return Ok(friends);
+        }
+
+        [HttpPost("{spyId}/AddFriend")]
+        public IActionResult AddFriend (int spyId, int friendId)
+        {
+            _spyRepository.AddFriend(spyId, friendId);
+            return NoContent();
         }
     }
 }
