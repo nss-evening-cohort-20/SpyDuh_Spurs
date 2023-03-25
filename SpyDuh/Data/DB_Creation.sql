@@ -58,7 +58,7 @@ GO
 CREATE TABLE [Friends] (
   [id] integer PRIMARY KEY identity NOT NULL,
   [spyId] int NOT NULL,
-  [friendId] int
+  [friendSpyId] int
 )
 GO
 CREATE TABLE [Enemy] (
@@ -103,7 +103,7 @@ ALTER TABLE [Enemy] ADD FOREIGN KEY ([spyId]) REFERENCES [Spy] ([id])
 GO
 ALTER TABLE [Enemy] ADD FOREIGN KEY ([enemySpyId]) REFERENCES [Spy] ([id])
 GO
-ALTER TABLE [Friends] ADD FOREIGN KEY ([friendId]) REFERENCES [Spy] ([id])
+ALTER TABLE [Friends] ADD FOREIGN KEY ([friendSpyId]) REFERENCES [Spy] ([id])
 GO
 ALTER TABLE [Servicejoin] ADD FOREIGN KEY ([serviceId]) REFERENCES [Service] ([id])
 GO
@@ -188,7 +188,7 @@ VALUES
 SET IDENTITY_INSERT [ServiceJoin] OFF
 SET IDENTITY_INSERT [Friends] ON
 INSERT INTO [Friends]
-  ([id], [spyId], [friendId])
+  ([id], [spyId], [friendSpyId])
 VALUES
   (1, 1, 3 ),
   (2, 2, 4),
