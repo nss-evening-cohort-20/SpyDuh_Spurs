@@ -19,10 +19,10 @@ namespace SpyDuh.Controllers
             _servicesRepository = servicesRepository;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("ListServices/{id}")]
+        public IActionResult GetAll(int id)
         {
-            return Ok(_servicesRepository.GetAll());
+            return Ok(_servicesRepository.GetAll(id));
         }
 
         [HttpGet("{id}")]
@@ -37,14 +37,14 @@ namespace SpyDuh.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Service service)
+        public IActionResult Post(ServiceWithoutCost service)
         {
             _servicesRepository.Add(service);
             return CreatedAtAction("Get", new { id = service.Id }, service );
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Service service)
+        public IActionResult Put(int id, ServiceWithoutCost service)
         {
             if (id != service.Id)
             {
