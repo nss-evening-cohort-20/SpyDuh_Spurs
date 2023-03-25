@@ -351,12 +351,9 @@ order by e.enemySpyId asc";
 
         public void Add(NewSpy spy)
         {
-            using (var conn = Connection)
-            {
+            using (var conn = Connection){
                 conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {              
-
+                using (var cmd = conn.CreateCommand()) {
                     cmd.CommandText = @$"
 IF EXISTS(SELECT * FROM Handler WHERE Handler.Id = @handlerId)
 BEGIN
@@ -417,5 +414,127 @@ VALUES(@spyId, @enemySpyId),(@spyId2, @enemySpyId2)";
             }
         }
 
+        public List<FriendSpy> listFriends(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    SELECT
+                    FS.Id AS FriendId, FS.Name AS FriendName, FS.UserName AS FriendUserName, FS.Email AS FriendEmail, FS.IsMember AS FriendIsMember, FS.DateCreated AS FriendDateCreated,
+                    FSJ.skillLevel AS FriendSkillLevel,
+                    FSK.Id AS FriendSkillId, FSK.SkillName AS FriendSkill,
+                    
+                    FSRVJ.Cost AS FriendCost,
+
+                    FSRV.Id AS FriendServiceId, FSRV.ServiceName as FriendServiceName
+                    FROM Spy S
+                    LEFT JOIN Friends F 
+                    ON F.spyId = S.Id
+
+                    LEFT JOIN Spy FS 
+                    ON F.friendSpyId = FS.id
+
+                    LEFT JOIN SKillJoin FSJ
+                    ON FSJ.SpyId = FS.id
+
+                    LEFT JOIN
+                    Skill FSK
+                    ON FSK.id = FSJ.SkillId
+
+                    LEFT JOIN [ServiceJoin] FSRVJ
+                    ON FSRVJ.spyId = FS.id
+
+                    LEFT JOIN [Service] FSRV
+                    ON FSRV.id = FSRVJ.serviceId
+                    where f.spyId = @id";
+
+                    DbUtils.AddParameter(cmd, "@id", id);
+                    var reader = cmd.ExecuteReader();
+                    var spy = new FriendSpy();
+                    var friends = new List<FriendSpy>();
+                    while (reader.Read())
+                    {
+                        var friendId = DbUtils.GetInt(reader, "FriendId");
+                        var existingFriend = friends.FirstOrDefault(x => x.Id == friendId);
+
+                        if (existingFriend == null)
+                        {
+
+
+                            existingFriend = new FriendSpy()
+                            {
+                                Id = friendId,
+                                Name = DbUtils.GetString(reader, "FriendName"),
+                                UserName = DbUtils.GetString(reader, "FriendUserName"),
+                                Email = DbUtils.GetString(reader, "FriendEmail"),
+                                IsMemeber = DbUtils.GetBoolean(reader, "FriendIsMember"),
+                                DateCreated = DbUtils.GetDateTime(reader, "FriendDateCreated"),
+                                Skills = new List<Skill>(),
+                                Services = new List<Service>()
+                            };
+
+                            friends.Add(existingFriend);
+                        }
+                        var skillId = DbUtils.GetInt(reader, "FriendSkillId");
+                        var exisitingSkill = existingFriend.Skills.FirstOrDefault(x => x.Id == skillId);
+                        if (exisitingSkill == null)
+                        {
+                            exisitingSkill = new Skill()
+                            {
+                                Id = skillId,
+                                SkillName = DbUtils.GetString(reader, "FriendSkill"),
+                                SkillLevel = DbUtils.GetInt(reader, "FriendSkillLevel")
+
+                            };
+                            existingFriend.Skills.Add(exisitingSkill);
+                        }
+
+                        var serviceId = DbUtils.GetInt(reader, "FriendServiceId");
+                        var existngService = existingFriend.Services.FirstOrDefault(x => x.Id == serviceId);
+                        if (existngService == null)
+                        {
+                            existngService = new Service()
+                            {
+                                Id = serviceId,
+                                ServiceName = DbUtils.GetString(reader, "FriendServiceName"),
+                                Cost = DbUtils.GetInt(reader, "FriendCost")
+                            };
+                            existingFriend.Services.Add(existngService);
+                        }
+                    }
+
+                    reader.Close();
+                    return friends;
+
+                }
+
+            }
+        }
+
+        public void AddFriend(int spyId, int friendSpyId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Friends(spyId, friendSpyId)
+OUTPUT INSERTED.id
+VALUES(@spyId, @friendSpyId),(@spyId2, @friendSpyId2)";
+
+                    DbUtils.AddParameter(cmd, "@spyId", spyId);
+                    DbUtils.AddParameter(cmd, "@friendSpyId", friendSpyId);
+                    DbUtils.AddParameter(cmd, "@spyId2", friendSpyId);
+                    DbUtils.AddParameter(cmd, "@friendSpyId2", spyId);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
     }
 }
+        

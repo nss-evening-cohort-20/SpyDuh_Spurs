@@ -44,6 +44,7 @@ namespace SpyDuh.Repositories
                                 Skills = new List<Skill>()
                             };
                         }
+
                         spySkills.Add(existingSkill);
 
                         existingSkill.Skills.Add(new Skill()
