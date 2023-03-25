@@ -8,7 +8,7 @@ namespace SpyDuh.Repositories
     {
         public ServicesRepository(IConfiguration configuration) : base(configuration) { }
 
-        public List<Service> GetAll()
+        public List<Service> GetAll(int id)
         {
             using (var conn = Connection)
             {
@@ -16,15 +16,16 @@ namespace SpyDuh.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    SELECT 
-                    s.serviceName,
-                    sj.cost,
-                    spy.name, spy.userName
+                    SELECT s.Id AS ServiceId, s.ServiceName, sj.Cost, spy.UserName, spy.Name
                     FROM Service s
-                    JOIN ServiceJoin sj
-                    ON s.id = sj.serviceId
-                    JOIN Spy spy
-                    ON spy.id = sj.spyId ";
+                    LEFT JOIN ServiceJoin sj
+                    ON s.Id = sj.serviceId
+                    LEFT JOIN Spy spy
+                    ON spy.id = sj.id
+                    WHERE spy.id = @id
+                     ";
+
+                    DbUtils.AddParameter(cmd, "@id", id);
 
                     var reader = cmd.ExecuteReader();
 
@@ -33,20 +34,17 @@ namespace SpyDuh.Repositories
                     {
                         service.Add(new Service()
                         {
-                            //Id = DbUtils.GetInt(reader, "id"),
-                            ServiceName = DbUtils.GetString(reader, "serviceName"),
-                            ServiceJoin = new ServiceJoin()
-                            {
-                                cost = DbUtils.GetInt(reader, "cost")
-                            },
+                            Id = DbUtils.GetInt(reader, "ServiceId"),
+                            ServiceName = DbUtils.GetString(reader, "ServiceName"),
+                            Cost = DbUtils.GetInt(reader, "Cost"),
                             Spy = new Spy()
                             {
-                                Name = DbUtils.GetString(reader, "name"),
-                                UserName = DbUtils.GetString(reader, "userName")
-                            } 
+                                UserName = DbUtils.GetString(reader, "UserName"),
+                                Name = DbUtils.GetString(reader, "Name")
+                            }
                         });
                     }
-
+                    
                     reader.Close();
 
                     return service;
@@ -117,6 +115,7 @@ namespace SpyDuh.Repositories
                      WHERE Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@serviceName", service.ServiceName);
+                    DbUtils.AddParameter(cmd, "@Id", service.Id);
                     cmd.ExecuteNonQuery();
                 }
             }

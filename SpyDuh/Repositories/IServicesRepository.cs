@@ -4,7 +4,7 @@ namespace SpyDuh.Repositories
 {
     public interface IServicesRepository
     {
-        List<Service> GetAll();
+        List<Service> GetAll(int id);
 
         Service GetById(int id);
 

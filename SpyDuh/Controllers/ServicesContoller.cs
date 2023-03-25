@@ -19,10 +19,10 @@ namespace SpyDuh.Controllers
             _servicesRepository = servicesRepository;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("ListServices/{id}")]
+        public IActionResult GetAll(int id)
         {
-            return Ok(_servicesRepository.GetAll());
+            return Ok(_servicesRepository.GetAll(id));
         }
 
         [HttpGet("{id}")]
