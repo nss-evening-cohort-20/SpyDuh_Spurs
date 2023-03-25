@@ -435,7 +435,7 @@ VALUES(@spyId, @enemySpyId),(@spyId2, @enemySpyId2)";
                     ON F.spyId = S.Id
 
                     LEFT JOIN Spy FS 
-                    ON F.friendSpyId = FS.id
+                    ON F.friendId = FS.id
 
                     LEFT JOIN SKillJoin FSJ
                     ON FSJ.SpyId = FS.id
