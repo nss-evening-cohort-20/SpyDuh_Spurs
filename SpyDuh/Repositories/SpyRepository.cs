@@ -521,14 +521,14 @@ VALUES(@spyId, @enemySpyId),(@spyId2, @enemySpyId2)";
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Friends(spyId, friendSpyId)
+                    cmd.CommandText = @"INSERT INTO Friends(spyId, friendId)
 OUTPUT INSERTED.id
-VALUES(@spyId, @friendSpyId),(@spyId2, @friendSpyId2)";
+VALUES(@spyId, @friendId),(@spyId2, @friendId2)";
 
                     DbUtils.AddParameter(cmd, "@spyId", spyId);
-                    DbUtils.AddParameter(cmd, "@friendSpyId", friendSpyId);
+                    DbUtils.AddParameter(cmd, "@friendId", friendSpyId);
                     DbUtils.AddParameter(cmd, "@spyId2", friendSpyId);
-                    DbUtils.AddParameter(cmd, "@friendSpyId2", spyId);
+                    DbUtils.AddParameter(cmd, "@friendId2", spyId);
 
                     cmd.ExecuteNonQuery();
 
