@@ -327,6 +327,28 @@ order by e.enemySpyId asc";
             }
         }
 
+        //public int HandlerLength()
+        //{
+        //    using (var conn = Connection)
+        //    {
+        //        conn.Open();
+        //        using (var cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandText = @"SELECT COL_LENGTH('Handler','id') AS Result";
+        //            var reader = cmd.ExecuteReader();
+        //            int length = DbUtils.GetInt16(reader,"Result");
+        //            if (reader.Read())
+        //            {
+        //                length = DbUtils.GetInt16(reader, "Result");
+        //            }
+        //            reader.Close();
+        //            return length;
+
+        //        }
+        //    }
+        //}
+            
+
         public void Add(NewSpy spy)
         {
             using (var conn = Connection)
@@ -336,9 +358,12 @@ order by e.enemySpyId asc";
                 {              
 
                     cmd.CommandText = @$"
+IF EXISTS(SELECT * FROM Handler WHERE Handler.Id = @handlerId)
+BEGIN
 INSERT INTO Spy(name, userName, email, isMember, handlerId, DateCreated)
 OUTPUT INSERTED.id
-VALUES(@name, @userName, @email, {1}, @handlerId, @DateCreated)";              
+VALUES(@name, @userName, @email, {1}, @handlerId, @DateCreated)
+END";              
 
                     DbUtils.AddParameter(cmd, "@name", spy.Name);
                     DbUtils.AddParameter(cmd, "@userName", spy.UserName);
@@ -346,8 +371,9 @@ VALUES(@name, @userName, @email, {1}, @handlerId, @DateCreated)";
                     //DbUtils.AddParameter(cmd, "@isMember", 1);
                     DbUtils.AddParameter(cmd, "@handlerId", spy.HandlerId );
                     DbUtils.AddParameter(cmd, "@DateCreated", DateTime.Now);
+               
+                    spy.Id = Convert.ToInt16(cmd.ExecuteScalar());
 
-                    spy.Id = (int)cmd.ExecuteScalar();
                 }
 
             }

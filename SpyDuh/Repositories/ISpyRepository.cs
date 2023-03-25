@@ -9,6 +9,7 @@ namespace SpyDuh.Repositories
        public void Add(NewSpy spy);
        public void Delete(int id);
        public void AddEnemy(int spyId, int enemyId);
+       //public int HandlerLength();
     }
 
 }

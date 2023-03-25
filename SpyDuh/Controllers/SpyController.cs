@@ -47,7 +47,13 @@ namespace SpyDuh.Controllers
                 return BadRequest("Please enter a valid HandlerId.");
             }
             _spyRepository.Add(spy);
-            return CreatedAtAction("test", new { id = spy.Id }, spy);
+
+          //if(spy.HandlerId > 4)
+          //  {
+          //      return BadRequest("Please enter a valid HandlerId.");
+          //  }
+                return CreatedAtAction("test", new { id = spy.Id }, spy);
+          
         }
 
         [HttpDelete("{id}")]
