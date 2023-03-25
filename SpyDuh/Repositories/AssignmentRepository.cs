@@ -17,7 +17,7 @@ namespace SpyDuh.Repositories
                 {
                     var sqlQuery =
                         @"SELECT 
-                        A.id as AssignmentId, A.name as AssignmentName, A.handlerId, A.spyId, A.allotedTime, A.dateCreated, A.endDate, A.status,
+                        A.id as AssignmentId, A.name as AssignmentName, A.handlerId, A.spyId, A.allotedTime, A.dateCreated, A.endDate,  A.isCompleted,
                         DATEDIFF(DAY, CURRENT_TIMESTAMP, A.endDate) as days,
                         S.name as SpyName, H.name as HandlerName
                         FROM Assignment A
@@ -54,7 +54,8 @@ namespace SpyDuh.Repositories
                             DateCreated = DbUtils.GetDateTime(reader, "dateCreated"),
                             endDate = DbUtils.GetDateTime(reader, "endDate"),
                             daysRemaining = DbUtils.GetInt(reader, "days"),
-                            Status = DbUtils.GetString(reader, "status")
+                            IsCompleted = DbUtils.GetBoolean(reader, "isCompleted")
+
                         };
                     }
 
