@@ -14,6 +14,10 @@ namespace SpyDuh.Utils
         {
             return reader.GetInt32(reader.GetOrdinal(column));  
         }
+        public static int GetInt16(SqlDataReader reader, string column)
+        {
+            return reader.GetInt16(reader.GetOrdinal(column));
+        }
         public static DateTime GetDateTime(SqlDataReader reader, string column)
         {
             return reader.GetDateTime(reader.GetOrdinal(column));
@@ -37,6 +41,17 @@ namespace SpyDuh.Utils
         public static bool GetBoolean(SqlDataReader reader, string column)
         {
             return reader.GetBoolean(reader.GetOrdinal(column));
+        }
+
+        public static bool IsDbNull(SqlDataReader reader, string column)
+        {
+            return reader.IsDBNull(reader.GetOrdinal(column));
+        }
+
+
+        public static bool IsNotDbNull(SqlDataReader reader, string column)
+        {
+            return !IsDbNull(reader, column);
         }
 
     }
